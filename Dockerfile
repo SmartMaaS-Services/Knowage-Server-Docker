@@ -46,15 +46,15 @@ ARG APACHE_TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.37/b
 
 # Knowage deps
 ARG LIB_COMMONS_LOGGING_NAME="commons-logging-1.1.1.jar"
-ARG LIB_COMMONS_LOGGING_URL="https://search.maven.org/remotecontent?filepath=commons-logging/commons-logging/1.1.1/${LIB_COMMONS_LOGGING_NAME}"
+ARG LIB_COMMONS_LOGGING_URL="https://repo1.maven.org/maven2/commons-logging/commons-logging/1.1.1/${LIB_COMMONS_LOGGING_NAME}"
 ARG LIB_COMMONS_LOGGING_API_NAME="commons-logging-api-1.1.jar"
-ARG LIB_COMMONS_LOGGING_API_URL="https://search.maven.org/remotecontent?filepath=commons-logging/commons-logging-api/1.1/${LIB_COMMONS_LOGGING_API_NAME}"
+ARG LIB_COMMONS_LOGGING_API_URL="https://repo1.maven.org/maven2/commons-logging/commons-logging-api/1.1/${LIB_COMMONS_LOGGING_API_NAME}"
 ARG LIB_CONCURRENT_NAME="oswego-concurrent-1.3.4.jar"
-ARG LIB_CONCURRENT_URL="https://search.maven.org/remotecontent?filepath=org/lucee/oswego-concurrent/1.3.4/${LIB_CONCURRENT_NAME}"
+ARG LIB_CONCURRENT_URL="https://repo1.maven.org/maven2/org/lucee/oswego-concurrent/1.3.4/${LIB_CONCURRENT_NAME}"
 ARG LIB_MYSQL_CONNECTOR_NAME="mysql-connector-java-5.1.33.jar"
-ARG LIB_MYSQL_CONNECTOR_URL="https://search.maven.org/remotecontent?filepath=mysql/mysql-connector-java/5.1.33/${LIB_MYSQL_CONNECTOR_NAME}"
+ARG LIB_MYSQL_CONNECTOR_URL="https://repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.33/${LIB_MYSQL_CONNECTOR_NAME}"
 ARG LIB_GERONIMO_COMMONJ_NAME="geronimo-commonj_1.1_spec-1.0.jar"
-ARG LIB_GERONIMO_COMMONJ_URL="https://search.maven.org/remotecontent?filepath=org/apache/geronimo/specs/geronimo-commonj_1.1_spec/1.0/${LIB_GERONIMO_COMMONJ_NAME}"
+ARG LIB_GERONIMO_COMMONJ_URL="https://repo1.maven.org/maven2/org/apache/geronimo/specs/geronimo-commonj_1.1_spec/1.0/${LIB_GERONIMO_COMMONJ_NAME}"
 ARG LIB_MYFOO_COMMONJ_NAME="commonj-1.0.jar"
 ARG LIB_MYFOO_COMMONJ_URL="https://github.com/SpagoBILabs/SpagoBI/blob/mvn-repo/releases/de/myfoo/commonj/1.0/${LIB_MYFOO_COMMONJ_NAME}?raw=true"
 ARG LIB_POSTGRESQL_CONNECTOR_NAME="postgresql-42.2.4.jar"
@@ -69,9 +69,9 @@ ENV MYSQL_SCRIPT_DIRECTORY ${KNOWAGE_DIRECTORY}/mysql
 WORKDIR ${KNOWAGE_DIRECTORY}
 
 # Install required packages and clean up to save space
-RUN apt-get update \
+RUN apt-get update -y \
 	&& apt-get upgrade -y \
-	&& apt-get install -y wget -q coreutils unzip mysql-client \
+	&& apt-get install -y wget -q coreutils unzip zip mysql\* \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Download MySql scripts
@@ -156,13 +156,13 @@ RUN wget -O temp.zip "${KNOWAGE_CORE_URL}" \
 WORKDIR ${KNOWAGE_DIRECTORY}/${APACHE_TOMCAT_PACKAGE}/lib
 
 # Download Knowage libs and put them into Apache Tomcat lib
-RUN wget -O "${LIB_COMMONS_LOGGING_NAME}" -q "${LIB_COMMONS_LOGGING_URL}"
-RUN wget -O "${LIB_COMMONS_LOGGING_API_NAME}" -q "${LIB_COMMONS_LOGGING_API_URL}"
-RUN wget -O "${LIB_CONCURRENT_NAME}" -q "${LIB_CONCURRENT_URL}"
-RUN wget -O "${LIB_MYSQL_CONNECTOR_NAME}" -q "${LIB_MYSQL_CONNECTOR_URL}"
-RUN wget -O "${LIB_GERONIMO_COMMONJ_NAME}" -q "${LIB_GERONIMO_COMMONJ_URL}"
-RUN wget -O "${LIB_MYFOO_COMMONJ_NAME}" -q "${LIB_MYFOO_COMMONJ_URL}"
-RUN wget -O "${LIB_POSTGRESQL_CONNECTOR_NAME}" -q "${LIB_POSTGRESQL_CONNECTOR_URL}"
+RUN wget -O "${LIB_COMMONS_LOGGING_NAME}" "${LIB_COMMONS_LOGGING_URL}"
+RUN wget -O "${LIB_COMMONS_LOGGING_API_NAME}" "${LIB_COMMONS_LOGGING_API_URL}"
+RUN wget -O "${LIB_CONCURRENT_NAME}" "${LIB_CONCURRENT_URL}"
+RUN wget -O "${LIB_MYSQL_CONNECTOR_NAME}" "${LIB_MYSQL_CONNECTOR_URL}"
+RUN wget -O "${LIB_GERONIMO_COMMONJ_NAME}" "${LIB_GERONIMO_COMMONJ_URL}"
+RUN wget -O "${LIB_MYFOO_COMMONJ_NAME}" "${LIB_MYFOO_COMMONJ_URL}"
+RUN wget -O "${LIB_POSTGRESQL_CONNECTOR_NAME}" "${LIB_POSTGRESQL_CONNECTOR_URL}"
 
 WORKDIR ${KNOWAGE_DIRECTORY}/${APACHE_TOMCAT_PACKAGE}/conf
 
